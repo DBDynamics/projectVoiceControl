@@ -1,0 +1,5 @@
+SpeechRecognition>=3.10.0
+edge-tts>=6.1.9
+sounddevice>=0.4.6
+soundfile>=0.12.1
+playsound==1.2.2
