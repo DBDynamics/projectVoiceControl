@@ -10,7 +10,22 @@ import threading
 import time
 import sounddevice as sd
 import soundfile as sf
+from DBDynamics import Ant
 
+# 初始化串口控制器（将 'COM9' 改为设备管理器中的实际端口，如 'COM3'）。
+# DBDynamics 默认以 1.5 Mbps 连接（serial: 1500000），端口被占用或无权限会报错。
+m = Ant('COM9')
+
+# 给 ID=1 的电机上电，使能控制（发送控制字 1）。
+m.setPowerOn(1)
+
+# 设置电机 1 的加/减速时间，单位毫秒（ms）。
+# 建议范围 200–1000ms；此处设为 100ms，响应更“急”。
+m.setAccTime(1, 100)
+
+# 设置电机 1 的目标速度，单位为 pulse/ms（50000 脉冲/圈）。
+# 步进电机合理速度通常在 0–300 之间，过高可能丢步。
+m.setTargetVelocity(1, 150)
 
 # 配置：选择更自然的中文神经语音（需要联网）
 VOICE = "zh-CN-XiaoxiaoNeural"
@@ -205,6 +220,7 @@ def main() -> None:
                     print(f"识别角度：{angle}")
                     # 后台播放“ok”，不阻塞，提升连续对话流畅度
                     play_ok_async(REPLY_TEXT)
+                    m.setTargetPosition(1, angle*51200/360)
                 else:
                     print("未识别到角度信息，请再试一次（例如：‘运动到90度’）。")
 
@@ -217,6 +233,7 @@ def main() -> None:
 
     except KeyboardInterrupt:
         print("\n已退出。")
+        m.stop()
 
 
 if __name__ == "__main__":
