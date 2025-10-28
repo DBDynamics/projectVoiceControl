@@ -220,7 +220,8 @@ def main() -> None:
                     print(f"识别角度：{angle}")
                     # 后台播放“ok”，不阻塞，提升连续对话流畅度
                     play_ok_async(REPLY_TEXT)
-                    m.setTargetPosition(1, angle*51200/360)
+
+                    m.setTargetPosition(1, angle*50000/360)
                 else:
                     print("未识别到角度信息，请再试一次（例如：‘运动到90度’）。")
 
